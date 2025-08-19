@@ -1,44 +1,42 @@
 import { Router } from "express";
-import {
-  create,
-  find,
-  findById,
-  findByIdAndUpdate,
-  findByIdAndDelete,
-} from "../models/Song";
+import Song from "../models/Song.js";
 const router = Router();
 
-// Crear canción
+// create a new song
 router.post("/", async (req, res) => {
-  const song = await create(req.body);
+  const song = await Song.create(req.body);
   res.status(201).json(song);
 });
 
-// Listar canciones
+// List all songs
 router.get("/", async (req, res) => {
-  const songs = await find();
+  const songs = await Song.find();
   res.json(songs);
 });
 
-// Obtener canción por ID
+// Get song by ID
 router.get("/:id", async (req, res) => {
-  const song = await findById(req.params.id);
+  const song = await Song.findOne({ id: parseInt(req.params.id, 10) });
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json(song);
 });
 
-// Actualizar canción
+// Update song by ID
 router.put("/:id", async (req, res) => {
-  const song = await findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const song = await Song.findOneAndUpdate(
+    { id: parseInt(req.params.id, 10) },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json(song);
 });
 
-// Eliminar canción
+// Delete song by ID
 router.delete("/:id", async (req, res) => {
-  const song = await findByIdAndDelete(req.params.id);
+  const song = await Song.findOneAndDelete({ id: parseInt(req.params.id, 10) });
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json({ message: "Song deleted" });
 });

@@ -1,20 +1,20 @@
 import { Router } from "express";
-import { create, findById, find } from "../models/Playlist";
-import { findById as _findById } from "../models/Song";
+import Playlist from "../models/Playlist.js";
+import Song from "../models/Song.js";
 const router = Router();
 
-// Crear playlist (se publica automáticamente)
+// create a new playlist (publishes it immediately)
 router.post("/", async (req, res) => {
-  const playlist = await create(req.body);
+  const playlist = await Playlist.create(req.body);
   res.status(201).json(playlist);
 });
 
-// Agregar canción a playlist
+// Get song's playlist by ID
 router.post("/:id/songs", async (req, res) => {
-  const playlist = await findById(req.params.id);
+  const playlist = await Playlist.findById(req.params.id);
   if (!playlist) return res.status(404).json({ error: "Playlist not found" });
 
-  const song = await _findById(req.body.songId);
+  const song = await Song.findById(req.body.songId);
   if (!song) return res.status(404).json({ error: "Song not found" });
 
   playlist.songs.unshift({ song: song._id });
@@ -23,9 +23,9 @@ router.post("/:id/songs", async (req, res) => {
   res.json(playlist);
 });
 
-// Listar playlists publicadas
+// List all playlists published
 router.get("/", async (req, res) => {
-  const playlists = await find()
+  const playlists = await Playlist.find()
     .populate("songs.song")
     .sort({ publishedAt: -1 });
 
