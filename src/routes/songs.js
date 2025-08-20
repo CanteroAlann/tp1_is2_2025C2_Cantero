@@ -16,27 +16,23 @@ router.get("/", async (req, res) => {
 
 // Get song by ID
 router.get("/:id", async (req, res) => {
-  const song = await Song.findOne({ id: parseInt(req.params.id, 10) });
+  const song = await Song.findOne({ id: req.params.id });
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json(song);
 });
 
 // Update song by ID
 router.put("/:id", async (req, res) => {
-  const song = await Song.findOneAndUpdate(
-    { id: parseInt(req.params.id, 10) },
-    req.body,
-    {
-      new: true,
-    }
-  );
+  const song = await Song.findOneAndUpdate({ id: req.params.id }, req.body, {
+    new: true,
+  });
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json(song);
 });
 
 // Delete song by ID
 router.delete("/:id", async (req, res) => {
-  const song = await Song.findOneAndDelete({ id: parseInt(req.params.id, 10) });
+  const song = await Song.findOneAndDelete({ id: req.params.id });
   if (!song) return res.status(404).json({ error: "Song not found" });
   res.json({ message: "Song deleted" });
 });
