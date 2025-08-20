@@ -14,4 +14,22 @@ const playlistSchema = new Schema({
   ],
 });
 
+playlistSchema.set("toJSON", {
+  transform: (_, ret) => {
+    return {
+      id: ret.id,
+      name: ret.name,
+      description: ret.description,
+      isPublished: ret.publishedAt ? true : false,
+      publishedAt: ret.publishedAt,
+      songs: ret.songs.map((s) => ({
+        id: s.song.id,
+        title: s.song.title,
+        artist: s.song.artist,
+        addedAt: s.addedAt,
+      })),
+    };
+  },
+});
+
 export default model("Playlist", playlistSchema);

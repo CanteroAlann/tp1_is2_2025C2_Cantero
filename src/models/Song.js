@@ -10,4 +10,14 @@ const songSchema = new Schema(
   { timestamps: true }
 );
 
+songSchema.set("toJSON", {
+  transform: (_, ret) => {
+    return {
+      id: ret.id,
+      title: ret.title,
+      artist: ret.artist,
+    };
+  },
+});
+
 export default model("Song", songSchema);
