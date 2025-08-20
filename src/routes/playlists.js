@@ -12,7 +12,9 @@ router.post("/", async (req, res) => {
 
 // Get song's playlist by ID
 router.post("/:id/songs", async (req, res) => {
-  const playlist = await Playlist.findOne({ id: req.params.id });
+  const playlist = await Playlist.findOne({ id: req.params.id }).populate(
+    "songs.song"
+  );
   if (!playlist) return res.status(404).json({ error: "Playlist not found" });
   const song = await Song.findOne({ id: req.body.songId });
   if (!song) return res.status(404).json({ error: "Song not found" });
