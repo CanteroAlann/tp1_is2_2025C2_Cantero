@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Playlist from "../models/Playlist.js";
 import Song from "../models/Song.js";
-import formatResponse from "../../utils/response_formater.js";
+import formatResponse from "../utils/response_formater.js";
 const router = Router();
 
 // create a new playlist (publishes it immediately)

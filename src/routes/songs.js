@@ -1,7 +1,7 @@
 import { Router } from "express";
 import Song from "../models/Song.js";
 const router = Router();
-import formatResponse from "../../utils/response_formater.js";
+import formatResponse from "../utils/response_formater.js";
 
 // create a new song
 router.post("/", async (req, res) => {
