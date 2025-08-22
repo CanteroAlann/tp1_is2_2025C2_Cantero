@@ -6,8 +6,25 @@ const songSchema = Joi.object({
   artist: Joi.string().required(),
 }).strict();
 
+const addSongSchema = Joi.object({
+  songId: Joi.string().required(),
+}).strict();
+
 export function validateSongSchema(body, instance = "") {
   const { error } = songSchema.validate(body, { abortEarly: true });
+  if (error) {
+    throw new BadRequestError({
+      type: "https://example.com/validation-error",
+      title: "Bad Request Error",
+      status: 400,
+      detail: error.details[0].message,
+      instance,
+    });
+  }
+}
+
+export function validateAddSongSchema(body, instance = "") {
+  const { error } = addSongSchema.validate(body, { abortEarly: true });
   if (error) {
     throw new BadRequestError({
       type: "https://example.com/validation-error",
