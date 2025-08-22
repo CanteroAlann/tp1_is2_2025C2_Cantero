@@ -4,6 +4,7 @@ const router = Router();
 import formatResponse from "../utils/response_formater.js";
 import { asyncHandler } from "../utils/async_handler.js";
 import { NotFoundError } from "../utils/app_errors.js";
+import { validateSongSchema } from "../utils/schema_validator.js";
 
 // create a new song
 router.post(
@@ -38,23 +39,32 @@ router.get(
 router.put(
   "/:id",
   asyncHandler(async (req, res, next) => {
-    const song = await Song.findOne({ id: req.params.id });
+    validateSongSchema(req.body, req.originalUrl);
+    const song = await Song.findOneAndUpdate({ id: req.params.id }, req.body, {
+      new: true,
+    });
     if (!song)
       throw new NotFoundError(
         `Song with ID ${req.params.id} not found`,
         req.originalUrl
       );
-    Object.assign(song, req.body);
-    await song.save();
+
     res.json(formatResponse(song));
   })
 );
 
 // Delete song by ID
-router.delete("/:id", async (req, res, next) => {
-  const song = await Song.findOneAndDelete({ id: req.params.id });
-  if (!song) next(new Error("Song not found"));
-  res.json({ message: "Song deleted" });
-});
+router.delete(
+  "/:id",
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.findOneAndDelete({ id: req.params.id });
+    if (!song)
+      throw new NotFoundError(
+        `Song with ID ${req.params.id} not found`,
+        req.originalUrl
+      );
+    res.status(204);
+  })
+);
 
 export default router;

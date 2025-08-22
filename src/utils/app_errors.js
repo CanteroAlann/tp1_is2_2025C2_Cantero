@@ -51,18 +51,6 @@ class BadRequestError extends AppError {
   }
 }
 
-class UnauthorizedError extends AppError {
-  constructor(detail = "Unauthorized", instance = "") {
-    super({
-      type: "https://example.com/probs/unauthorized",
-      title: "Unauthorized",
-      status: 401,
-      detail,
-      instance,
-    });
-  }
-}
-
 class ForbiddenError extends AppError {
   constructor(detail = "Forbidden", instance = "") {
     super({
@@ -70,30 +58,6 @@ class ForbiddenError extends AppError {
       title: "Forbidden",
       status: 403,
       detail,
-      instance,
-    });
-  }
-}
-
-class InvalidIdError extends AppError {
-  constructor(value, instance = "") {
-    super({
-      type: "https://example.com/probs/invalid-id",
-      title: "Invalid ID",
-      status: 400,
-      detail: `El valor '${value}' no es un ObjectId válido`,
-      instance,
-    });
-  }
-}
-
-class DuplicateKeyError extends AppError {
-  constructor(keyValue, instance = "") {
-    super({
-      type: "https://example.com/probs/duplicate-key",
-      title: "Duplicate Key Error",
-      status: 409,
-      detail: `El valor ya existe: ${JSON.stringify(keyValue)}`,
       instance,
     });
   }
@@ -115,9 +79,6 @@ export {
   AppError,
   NotFoundError,
   BadRequestError,
-  UnauthorizedError,
   ForbiddenError,
-  InvalidIdError,
-  DuplicateKeyError,
   ValidationMongoError,
 };
