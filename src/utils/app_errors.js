@@ -1,0 +1,123 @@
+class AppError extends Error {
+  constructor({
+    type = "about:blank",
+    title = "An error occurred",
+    status = 500,
+    detail = "Unexpected error",
+    instance = "",
+  }) {
+    super(detail);
+    this.type = type;
+    this.title = title;
+    this.status = status;
+    this.detail = detail;
+    this.instance = instance;
+
+    Error.captureStackTrace(this, this.constructor);
+  }
+
+  toJSON() {
+    return {
+      type: this.type,
+      title: this.title,
+      status: this.status,
+      detail: this.detail,
+      instance: this.instance,
+    };
+  }
+}
+
+class NotFoundError extends AppError {
+  constructor(detail = "The requested resource was not found", instance = "") {
+    super({
+      type: "https://example.com/probs/not-found",
+      title: "Resource Not Found",
+      status: 404,
+      detail,
+      instance,
+    });
+  }
+}
+
+class BadRequestError extends AppError {
+  constructor(detail = "Bad request", instance = "") {
+    super({
+      type: "https://example.com/probs/bad-request",
+      title: "Bad Request",
+      status: 400,
+      detail,
+      instance,
+    });
+  }
+}
+
+class UnauthorizedError extends AppError {
+  constructor(detail = "Unauthorized", instance = "") {
+    super({
+      type: "https://example.com/probs/unauthorized",
+      title: "Unauthorized",
+      status: 401,
+      detail,
+      instance,
+    });
+  }
+}
+
+class ForbiddenError extends AppError {
+  constructor(detail = "Forbidden", instance = "") {
+    super({
+      type: "https://example.com/probs/forbidden",
+      title: "Forbidden",
+      status: 403,
+      detail,
+      instance,
+    });
+  }
+}
+
+class InvalidIdError extends AppError {
+  constructor(value, instance = "") {
+    super({
+      type: "https://example.com/probs/invalid-id",
+      title: "Invalid ID",
+      status: 400,
+      detail: `El valor '${value}' no es un ObjectId válido`,
+      instance,
+    });
+  }
+}
+
+class DuplicateKeyError extends AppError {
+  constructor(keyValue, instance = "") {
+    super({
+      type: "https://example.com/probs/duplicate-key",
+      title: "Duplicate Key Error",
+      status: 409,
+      detail: `El valor ya existe: ${JSON.stringify(keyValue)}`,
+      instance,
+    });
+  }
+}
+
+class ValidationMongoError extends AppError {
+  constructor(message, instance = "") {
+    super({
+      type: "https://example.com/probs/validation-error",
+      title: "Validation Error",
+      status: 400,
+      detail: message,
+      instance,
+    });
+  }
+}
+
+export {
+  AppError,
+  NotFoundError,
+  BadRequestError,
+  UnauthorizedError,
+  ForbiddenError,
+  InvalidIdError,
+  DuplicateKeyError,
+  ValidationMongoError,
+};

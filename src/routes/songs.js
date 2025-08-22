@@ -2,12 +2,17 @@ import { Router } from "express";
 import Song from "../models/Song.js";
 const router = Router();
 import formatResponse from "../utils/response_formater.js";
+import { asyncHandler } from "../utils/async_handler.js";
+import { NotFoundError } from "../utils/app_errors.js";
 
 // create a new song
-router.post("/", async (req, res) => {
-  const song = await Song.create(req.body);
-  res.status(201).json(formatResponse(song));
-});
+router.post(
+  "/",
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.create(req.body);
+    res.status(201).json(formatResponse(song));
+  })
+);
 
 // List all songs
 router.get("/", async (req, res) => {
@@ -16,25 +21,39 @@ router.get("/", async (req, res) => {
 });
 
 // Get song by ID
-router.get("/:id", async (req, res) => {
-  const song = await Song.findOne({ id: req.params.id });
-  if (!song) return res.status(404).json({ error: "Song not found" });
-  res.json(formatResponse(song));
-});
+router.get(
+  "/:id",
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.findOne({ id: req.params.id });
+    if (!song)
+      throw new NotFoundError(
+        `Song with ID ${req.params.id} not found`,
+        req.originalUrl
+      );
+    res.json(formatResponse(song));
+  })
+);
 
 // Update song by ID
-router.put("/:id", async (req, res) => {
-  const song = await Song.findOneAndUpdate({ id: req.params.id }, req.body, {
-    new: true,
-  });
-  if (!song) return res.status(404).json({ error: "Song not found" });
-  res.json(formatResponse(song));
-});
+router.put(
+  "/:id",
+  asyncHandler(async (req, res, next) => {
+    const song = await Song.findOne({ id: req.params.id });
+    if (!song)
+      throw new NotFoundError(
+        `Song with ID ${req.params.id} not found`,
+        req.originalUrl
+      );
+    Object.assign(song, req.body);
+    await song.save();
+    res.json(formatResponse(song));
+  })
+);
 
 // Delete song by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   const song = await Song.findOneAndDelete({ id: req.params.id });
-  if (!song) return res.status(404).json({ error: "Song not found" });
+  if (!song) next(new Error("Song not found"));
   res.json({ message: "Song deleted" });
 });
 
