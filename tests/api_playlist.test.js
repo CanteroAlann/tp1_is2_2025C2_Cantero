@@ -27,6 +27,22 @@ describe("API Playlists", () => {
       "A personal collection of songs that capture my mood, inspire creativity, and set the vibe for any moment."
     );
   });
+  it("should not create a playlist with short description", async () => {
+    const res = await request(app).post("/playlists").send({
+      name: "Short Desc Playlist",
+      description: "Too short",
+    });
+    expect(res.status).toBe(400);
+  });
+
+  it("should not create a playlist with long description", async () => {
+    const longDescription = "A".repeat(300); // 300 characters long
+    const res = await request(app).post("/playlists").send({
+      name: "Long Desc Playlist",
+      description: longDescription,
+    });
+    expect(res.status).toBe(400);
+  });
 
   it("should list all playlists", async () => {
     const res = await request(app).get("/playlists");
