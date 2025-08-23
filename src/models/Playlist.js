@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 const playlistSchema = new Schema({
   id: { type: String, default: uuidv4, unique: true },
   name: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String, required: true, minlength: 50, maxlength: 255 },
   publishedAt: { type: Date, default: Date.now },
   songs: [
     {
