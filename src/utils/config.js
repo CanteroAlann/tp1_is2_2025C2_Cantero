@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 
-config();
+const result = config();
 
 let MONGO_URI = process.env.MONGO_URI;
 let PORT = process.env.PORT || 8080;

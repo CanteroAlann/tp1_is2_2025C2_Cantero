@@ -63,7 +63,7 @@ router.delete(
         `Song with ID ${req.params.id} not found`,
         req.originalUrl
       );
-    res.status(204);
+    res.status(204).end();
   })
 );
 

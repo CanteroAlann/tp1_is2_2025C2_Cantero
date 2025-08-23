@@ -10,6 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(json());
+connect(MONGO_URI);
 
 import songsRouter from "./routes/songs.js";
 import playlistsRouter from "./routes/playlists.js";
@@ -21,7 +22,5 @@ app.use("/playlists", playlistsRouter);
 
 app.use(mongoErrorHandler);
 app.use(errorHandler);
-
-connect(MONGO_URI);
 
 export default app;
