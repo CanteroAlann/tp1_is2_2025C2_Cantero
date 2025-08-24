@@ -5,6 +5,7 @@ const playlistSchema = new Schema({
   id: { type: String, default: uuidv4, unique: true },
   name: { type: String, required: true },
   description: { type: String, required: true, minlength: 50, maxlength: 255 },
+  isPublished: { type: Boolean, default: false },
   publishedAt: { type: Date, default: Date.now },
   songs: [
     {
@@ -20,7 +21,7 @@ playlistSchema.set("toJSON", {
       id: ret.id,
       name: ret.name,
       description: ret.description,
-      isPublished: ret.publishedAt ? true : false,
+      isPublished: ret.isPublished,
       publishedAt: ret.publishedAt,
       songs: ret.songs.map((s) => ({
         id: s.song.id,
