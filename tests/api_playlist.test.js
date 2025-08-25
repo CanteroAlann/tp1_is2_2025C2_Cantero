@@ -20,17 +20,25 @@ afterAll(async () => {
 });
 
 describe("API Playlists", () => {
-  it("should create a playlist", async () => {
+  it("should create a playlist and shouldn't be published", async () => {
     const res = await request(app).post("/playlists").send({
       name: "My Playlist",
       description:
         "A personal collection of songs that capture my mood, inspire creativity, and set the vibe for any moment.",
     });
+    const publishedList = await request(app).get("/playlists").query({ published: "false" });
     expect(res.status).toBe(201);
     expect(res.body.data.name).toBe("My Playlist");
     expect(res.body.data.description).toBe(
       "A personal collection of songs that capture my mood, inspire creativity, and set the vibe for any moment."
     );
+    expect(res.body.data.isPublished).toBe(false);
+    expect(res.body.data.publishedAt).toBe(null);
+    expect(publishedList.body.data.length).toBe(1);
+    expect(publishedList.body.data[0].name).toBe("My Playlist");
+    expect(publishedList.body.data[0].description).toBe(res.body.data.description);
+  
+
   });
   it("should not create a playlist with short description", async () => {
     const res = await request(app).post("/playlists").send({
