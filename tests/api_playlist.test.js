@@ -10,6 +10,11 @@ beforeAll(async () => {
   await Song.deleteMany({});
 });
 
+beforeEach(async () => {
+  await Playlist.deleteMany({});
+  await Song.deleteMany({});
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
@@ -44,10 +49,39 @@ describe("API Playlists", () => {
     expect(res.status).toBe(400);
   });
 
-  it("should list all playlists", async () => {
-    const res = await request(app).get("/playlists");
+  it("should list all playlists published", async () => {
+    const firstPlaylist = await request(app).post("/playlists").send({
+      name: "Published Playlist",
+      description:
+        "A vibrant collection of songs that bring energy and excitement to any occasion, perfect for sharing with friends and family.",
+    });
+    expect(firstPlaylist.status).toBe(201);
+    const publishRes = await request(app).post(`/playlists/${firstPlaylist.body.data.id}/publish`);
+    expect(publishRes.status).toBe(200);
+    const secondPlaylist = await request(app).post("/playlists").send({
+      name: "Unpublished Playlist",
+      description:
+        "A hidden gem of tracks that I keep to myself, a secret soundtrack for my personal moments and reflections.",
+    });
+    expect(secondPlaylist.status).toBe(201);
+    const thirdPlaylist = await request(app).post("/playlists").send({
+      name: "Another Published Playlist",
+      description:
+        "An eclectic mix of tunes that span genres and eras, creating a unique listening experience that's both nostalgic and fresh.",
+    });
+    expect(thirdPlaylist.status).toBe(201);
+    const publishRes2 = await request(app).post(`/playlists/${thirdPlaylist.body.data.id}/publish`);
+    expect(publishRes2.status).toBe(200);
+    const res = await request(app).get("/playlists").query({ published: "true" , sort : 'publishedAt' });
     expect(res.status).toBe(200);
-    expect(res.body.data.length).toBeGreaterThan(0);
+    expect(res.body.data.length).toBe(2);
+    expect(res.body.data[0].name).toBe("Another Published Playlist");
+    expect(res.body.data[0].isPublished).toBe(true);
+    expect(res.body.data[0].publishedAt).toBe(publishRes2.body.data.publishedAt);
+    expect(res.body.data[1].name).toBe("Published Playlist");
+    expect(res.body.data[1].isPublished).toBe(true);
+    expect(res.body.data[1].publishedAt).toBe(publishRes.body.data.publishedAt);
+
   });
 
   it("should get a playlist by ID", async () => {
@@ -60,6 +94,27 @@ describe("API Playlists", () => {
     expect(res.status).toBe(200);
     expect(res.body.data.name).toBe("Chill Vibes");
   });
+
+  it("should be idempotent when publishing the same playlist", async () => {
+    const playlistData = {
+      name: "Idempotent Playlist",
+      description:
+        "A unique collection of songs that remains unchanged no matter how many times you try to publish it.",
+    };
+    const createPlaylist = await request(app).post("/playlists").send(playlistData);
+    expect(createPlaylist.status).toBe(201);
+    const id_of_list = createPlaylist.body.data.id;
+    const firstPublish = await request(app).post(`/playlists/${id_of_list}/publish`);
+    expect(firstPublish.status).toBe(200);
+    const secondPublish = await request(app).post(`/playlists/${id_of_list}/publish`);
+    expect(secondPublish.status).toBe(200);
+    expect(firstPublish.body.data.isPublished).toBe(true);
+    expect(secondPublish.body.data.isPublished).toBe(true);
+    expect(firstPublish.body.data.publishedAt).toBe(
+      secondPublish.body.data.publishedAt
+    );
+  });
+
 
   it("should add a song to a playlist", async () => {
     const newPlaylist = await Playlist.create({

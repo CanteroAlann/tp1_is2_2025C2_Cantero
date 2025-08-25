@@ -79,7 +79,7 @@ router.get(
 
 // List all playlists published
 router.get("/", async (req, res) => {
-  const isPublished = req.query.published === "true";
+  const isPublished = req.query.published === 'true';
   const sortOption = req.query.sort;
   const playlists = await Playlist.find({ isPublished: isPublished })
     .populate("songs.song")
