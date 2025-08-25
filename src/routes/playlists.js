@@ -17,6 +17,25 @@ router.post(
   })
 );
 
+router.post(
+  "/:id/publish",
+  asyncHandler(async (req, res) => {
+    const playlist = await Playlist.findOne({ id: req.params.id });
+    if (!playlist) {
+      throw new NotFoundError(
+        `Playlist with ID ${req.params.id} not found`,
+        req.originalUrl
+      );
+    }
+    if (!playlist.isPublished) {
+      playlist.isPublished = true;
+      playlist.publishedAt = new Date();
+      await playlist.save();
+    }
+    res.json(formatResponse(playlist));
+  })
+);
+
 // Get song's playlist by ID
 router.post(
   "/:id/songs",
@@ -24,11 +43,12 @@ router.post(
     const playlist = await Playlist.findOne({ id: req.params.id }).populate(
       "songs.song"
     );
-    if (!playlist)
+    if (!playlist) {
       throw new NotFoundError(
         `Playlist with ID ${req.params.id} not found`,
         req.originalUrl
       );
+    }
     validateAddSongSchema(req.body, req.originalUrl);
     const song = await Song.findOne({ id: req.body.songId });
     if (!song)
@@ -39,7 +59,6 @@ router.post(
 
     playlist.songs.unshift({ song: song });
     await playlist.save();
-
     res.json(formatResponse(playlist));
   })
 );
@@ -60,11 +79,14 @@ router.get(
 
 // List all playlists published
 router.get("/", async (req, res) => {
-  const playlists = await Playlist.find()
+  const isPublished = req.query.published === "true";
+  const sortOption = req.query.sort;
+  const playlists = await Playlist.find({ isPublished: isPublished })
     .populate("songs.song")
-    .sort({ publishedAt: -1 });
+    .sort({ [sortOption]: -1 });
 
   playlists.forEach((pl) => {
+    pl.songs = pl.songs.filter((s) => s.song !== null);
     pl.songs.sort((a, b) => b.addedAt - a.addedAt);
   });
 
