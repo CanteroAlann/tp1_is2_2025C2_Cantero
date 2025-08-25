@@ -1,11 +1,10 @@
 import request from "supertest";
 import app from "../src/app.js";
-import mongoose from "mongoose";
 import Playlist from "../src/models/Playlist.js";
 import Song from "../src/models/Song.js";
-
+import connectDB from "../src/utils/db.js";
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+  await connectDB();
   await Playlist.deleteMany({});
   await Song.deleteMany({});
 });
@@ -16,7 +15,9 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-  await mongoose.connection.close();
+  await Playlist.deleteMany({});
+  await Song.deleteMany({});
+  await Promise.all([Playlist.db.close(), Song.db.close()]);
 });
 
 describe("API Playlists", () => {
