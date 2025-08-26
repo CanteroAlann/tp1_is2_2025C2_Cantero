@@ -1,0 +1,27 @@
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Logs
+logs
+*.log
+
+# IDE / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Tests 
+coverage
