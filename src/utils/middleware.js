@@ -10,10 +10,19 @@ function mongoErrorHandler(err, req, res, next) {
 }
 
 function errorHandler(err, req, res, next) {
+  console.log(err.name);
   if (err instanceof AppError) {
     return res.status(err.status).json(err.toJSON());
   }
-
+  if (err.name === "SyntaxError") {
+    const syntaxError = new AppError({
+      status: 400,
+      title: "Bad Request",
+      detail: "Invalid JSON syntax",
+      instance: req.originalUrl,
+    });
+    return res.status(400).json(syntaxError.toJSON());
+  }
   const genericError = new AppError({
     status: 500,
     title: "Internal Server Error",
