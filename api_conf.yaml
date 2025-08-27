@@ -2,10 +2,9 @@ openapi: 3.0.0
 info:
   title: Melodia Playlist Service API
   version: 1.0.0
-  
-  
+
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:3000
     description: Local backend server
 
 paths:
@@ -17,9 +16,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateSongRequest'
+              $ref: "#/components/schemas/CreateSongRequest"
       responses:
-        '201':
+        "201":
           description: Song created successfully
           content:
             application/json:
@@ -27,18 +26,18 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Song'
-        '400':
+                    $ref: "#/components/schemas/Song"
+        "400":
           description: Bad request error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    
+                $ref: "#/components/schemas/ErrorResponse"
+
     get:
       summary: Retrieve all songs
       responses:
-        '200':
+        "200":
           description: A list of songs
           content:
             application/json:
@@ -48,7 +47,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Song'
+                      $ref: "#/components/schemas/Song"
 
   /songs/{id}:
     get:
@@ -58,9 +57,9 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
-        '200':
+        "200":
           description: Song retrieved successfully
           content:
             application/json:
@@ -68,13 +67,13 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Song'
-        '404':
+                    $ref: "#/components/schemas/Song"
+        "404":
           description: Song not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
     put:
       summary: Update a song by ID
@@ -83,15 +82,15 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSongRequest'
+              $ref: "#/components/schemas/UpdateSongRequest"
       responses:
-        '200':
+        "200":
           description: Song updated successfully
           content:
             application/json:
@@ -99,19 +98,19 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Song'
-        '400':
+                    $ref: "#/components/schemas/Song"
+        "400":
           description: Bad request error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Song not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
     delete:
       summary: Delete a song by ID
@@ -120,16 +119,16 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
-        '204':
+        "204":
           description: Song deleted successfully
-        '404':
+        "404":
           description: Song not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /playlists:
     post:
@@ -139,9 +138,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePlaylistRequest'
+              $ref: "#/components/schemas/CreatePlaylistRequest"
       responses:
-        '201':
+        "201":
           description: Playlist created successfully
           content:
             application/json:
@@ -149,13 +148,13 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Playlist'
-        '400':
+                    $ref: "#/components/schemas/Playlist"
+        "400":
           description: Bad request error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
     get:
       summary: Retrieve playlists (filter by published)
@@ -173,10 +172,10 @@ paths:
           required: false
           schema:
             type: string
-            default: -publishedAt
+            default: publishedAt
           description: Sort expression (e.g., -publishedAt).
       responses:
-        '200':
+        "200":
           description: A list of playlists
           content:
             application/json:
@@ -186,7 +185,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Playlist'
+                      $ref: "#/components/schemas/Playlist"
 
   /playlists/{id}:
     get:
@@ -196,9 +195,9 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
-        '200':
+        "200":
           description: Playlist retrieved successfully (songs ordered by addedAt desc)
           content:
             application/json:
@@ -206,13 +205,13 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Playlist'
-        '404':
+                    $ref: "#/components/schemas/Playlist"
+        "404":
           description: Playlist not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
     delete:
       summary: Delete a playlist by ID
@@ -221,16 +220,16 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
-        '204':
+        "204":
           description: Playlist deleted successfully
-        '404':
+        "404":
           description: Playlist not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   /playlists/{id}/songs:
     post:
@@ -240,15 +239,15 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AddSongToPlaylistRequest'
+              $ref: "#/components/schemas/AddSongToPlaylistRequest"
       responses:
-        '200':
+        "200":
           description: Song added to playlist successfully
           content:
             application/json:
@@ -256,20 +255,20 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Playlist'
-        '400':
+                    $ref: "#/components/schemas/Playlist"
+        "400":
           description: Bad request error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Playlist or song not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-                
+                $ref: "#/components/schemas/ErrorResponse"
+
   /playlists/{id}/publish:
     post:
       summary: Publish a playlist (idempotent)
@@ -279,9 +278,9 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
-        '200':
+        "200":
           description: Playlist published
           content:
             application/json:
@@ -289,13 +288,13 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/Playlist'
-        '404':
+                    $ref: "#/components/schemas/Playlist"
+        "404":
           description: Playlist not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
@@ -348,7 +347,7 @@ components:
         id: { type: integer }
         name: { type: string }
         description: { type: string }
-        isPublished: 
+        isPublished:
           type: boolean
           description: Visibility flag. In the optional publish variant it starts as false until /publish is called.
         publishedAt:
@@ -359,7 +358,7 @@ components:
         songs:
           type: array
           items:
-            $ref: '#/components/schemas/PlaylistSong'
+            $ref: "#/components/schemas/PlaylistSong"
 
     CreatePlaylistRequest:
       type: object
@@ -378,7 +377,7 @@ components:
         - songId
       properties:
         songId:
-          type: integer
+          type: string
 
     ErrorResponse:
       type: object
