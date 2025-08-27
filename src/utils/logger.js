@@ -9,7 +9,8 @@ export function setupLogger(app, env) {
       { flags: "a" }
     );
     app.use(morgan("combined", { stream: accessLogStream }));
-  } else {
+  }
+  if (env === "development") {
     app.use(morgan("dev"));
   }
 }
