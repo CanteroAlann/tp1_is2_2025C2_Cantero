@@ -10,9 +10,10 @@
 4. [Guía de Testing](#guía-de-testing)
 5. [Docker](#docker)
    - [Construir la imagen](#construir-la-imagen)
-   - [Correr la base de datos](#correr-la-base-de-datos)
-   - [Correr el servicio](#correr-el-servicio)
-6. [Licencia](#licencia)
+   - [Correr la aplicacion](#correr-la-aplicacion)
+6. [Github Actions](#github-actions)
+7. [Correr tests fuera de github Actions](#correr-tests-fuera-de-github-actions)
+8. [Licencia](#licencia)
 
 ---
 
@@ -40,7 +41,7 @@ Para levantar el entorno de desarrollo es necesario contar con:
 
 ---
 
-## 🧪 Guía de Testing
+## Guía de Testing
 
 Se utilizó la librería **Jest** para los tests.  
 documentación oficial aquí: [User Guide](https://jestjs.io/docs/getting-started)
@@ -49,13 +50,13 @@ documentación oficial aquí: [User Guide](https://jestjs.io/docs/getting-starte
 
 ## Docker
 
-### Construir la imagen
+## Construir la imagen
 
 ```bash
 docker build -t nombre-imagen .
 ```
 
-### Correr la aplicacion
+## Correr la aplicacion
 
 ```bash
 docker compose up nombre-imagen
@@ -63,7 +64,7 @@ docker compose up nombre-imagen
 
 ---
 
-### Github Actions
+## Github Actions
 
 🔹 **Cómo funciona**
 
