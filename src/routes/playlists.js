@@ -20,7 +20,9 @@ router.post(
 router.post(
   "/:id/publish",
   asyncHandler(async (req, res) => {
-    const playlist = await Playlist.findOne({ id: req.params.id });
+    const playlist = await Playlist.findOne({ id: req.params.id }).populate(
+      "songs.song"
+    );
     if (!playlist) {
       throw new NotFoundError(
         `Playlist with ID ${req.params.id} not found`,
@@ -79,7 +81,7 @@ router.get(
 
 // List all playlists published
 router.get("/", async (req, res) => {
-  const isPublished = req.query.published === 'true';
+  const isPublished = req.query.published === "true";
   const sortOption = req.query.sort;
   const playlists = await Playlist.find({ isPublished: isPublished })
     .populate("songs.song")
