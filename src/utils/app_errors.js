@@ -1,3 +1,11 @@
+/**
+ *class representing a custom application error.
+ its returns a JSON following the RFC 7807 standard.
+ *
+ * @class AppError
+ * @extends {Error}
+ */
+
 class AppError extends Error {
   constructor({
     type = "about:blank",
@@ -27,6 +35,12 @@ class AppError extends Error {
   }
 }
 
+/**
+ *class representing a "Not Found" error.
+ *
+ * @class NotFoundError
+ * @extends {AppError}
+ */
 class NotFoundError extends AppError {
   constructor(detail = "The requested resource was not found", instance = "") {
     super({
@@ -39,6 +53,12 @@ class NotFoundError extends AppError {
   }
 }
 
+/**
+ *class representing a "Bad Request" error.
+ *
+ * @class BadRequestError
+ * @extends {AppError}
+ */
 class BadRequestError extends AppError {
   constructor(detail = "Bad request", instance = "") {
     super({
@@ -51,6 +71,13 @@ class BadRequestError extends AppError {
   }
 }
 
+
+/**
+ *class representing a "Forbidden" error.
+ *
+ * @class ForbiddenError
+ * @extends {AppError}
+ */
 class ForbiddenError extends AppError {
   constructor(detail = "Forbidden", instance = "") {
     super({
@@ -63,6 +90,12 @@ class ForbiddenError extends AppError {
   }
 }
 
+/**
+ *class representing a "Validation MongoDB" error.
+ *
+ * @class ValidationMongoError
+ * @extends {AppError}
+ */
 class ValidationMongoError extends AppError {
   constructor(message, instance = "") {
     super({

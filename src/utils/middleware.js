@@ -1,5 +1,14 @@
 import { AppError, ValidationMongoError } from "./app_errors.js";
 
+/**
+ *this function is a middleware to handle MongoDB validation errors in Express.
+ *
+ * @param {*} err
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @return {*}
+ */
 function mongoErrorHandler(err, req, res, next) {
   if (err.name === "ValidationError") {
     return res
@@ -9,6 +18,15 @@ function mongoErrorHandler(err, req, res, next) {
   next(err);
 }
 
+/**
+ *this function is a middleware to handle general errors in Express.
+ *
+ * @param {*} err
+ * @param {*} req
+ * @param {*} res
+ * @param {*} next
+ * @return {*} 
+ */
 function errorHandler(err, req, res, next) {
   console.log(err.name);
   if (err instanceof AppError) {
