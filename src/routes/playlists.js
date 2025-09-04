@@ -69,7 +69,9 @@ router.post(
 router.get(
   "/:id",
   asyncHandler(async (req, res, next) => {
-    const playlist = await Playlist.findOne({ id: req.params.id });
+    const playlist = await Playlist.findOne({ id: req.params.id }).populate(
+      "songs.song"
+    );
     if (!playlist)
       throw new NotFoundError(
         `Playlist with ID ${req.params.id} not found`,
