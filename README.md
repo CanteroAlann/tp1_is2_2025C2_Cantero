@@ -50,6 +50,12 @@ documentación oficial aquí: [User Guide](https://jestjs.io/docs/getting-starte
 
 ## Docker
 
+## Generar el .env con
+
+```bash
+cp .env.example .env
+```
+
 ## Construir la imagen
 
 ```bash
@@ -85,15 +91,27 @@ npm test → Ejecuta tus tests como definiste en package.json.<br>
 
 ## Correr tests fuera de github Actions
 
-Para correr tests una vez instalado el proyecto en tu computadora
+Una vez dentro del directorio del proyecto a la altura del package.json abrir una terminal y ejecutar
 
-1. construir la imagen usando:
+1. instalar dependencias:
 
 ```bash
-docker build -t nombre-imagen .
+npm install
 ```
 
-2. reemplazar la variable de entorno dentro del .env
+2. generar el .env
+
+```bash
+cp .env.example .env
+```
+
+3. contruir la imagen
+
+```bash
+docker build -t <nombre> .
+```
+
+4. reemplazar en el .env
 
 ```mongo_uri_test_git
 MONGO_URI_TEST=mongodb://admin:secret@mongodb:27017/miapp_test?authSource=admin
@@ -105,13 +123,13 @@ por lo siguiente
 MONGO_URI_TEST=mongodb://admin:secret@localhost:27017/miapp_test?authSource=admin
 ```
 
-3. correr solo el servicio de la db
+5. correr solo el servicio de la db
 
 ```bash
 docker compose up mongodb.
 ```
 
-4. dentro del directorio del proyecto ejecutar
+6. dentro del directorio del proyecto ejecutar
 
 ```bash
 npm test
